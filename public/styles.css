@@ -448,10 +448,10 @@ nav {
 }
 
 .user-item {
-    background: white;
-    padding: 15px;
-    margin: 10px 0;
+    background-color: #f9f9f9;
     border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
@@ -587,11 +587,13 @@ nav {
 .appointment-actions {
     display: flex;
     gap: 5px;
+    flex-wrap: wrap;
 }
 
 .appointment-actions button {
     padding: 5px 10px;
     font-size: 0.9em;
+    margin: 2px;
 }
 
 /* Modal Styles */
@@ -708,4 +710,269 @@ nav {
     #dietitian-patient-list {
         grid-template-columns: 1fr;
     }
+}
+
+/* Search Box */
+.search-box {
+    display: flex;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.search-box input {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px 0 0 4px;
+    font-size: 1rem;
+}
+
+.search-box button {
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-box button:hover {
+    background-color: #45a049;
+}
+
+/* Patient Actions Header */
+.patient-actions-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.patient-actions-header .search-box {
+    flex: 1;
+    margin-bottom: 0;
+}
+
+.patient-actions-header button:not(.search-box button) {
+    white-space: nowrap;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .patient-actions-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .patient-actions-header .search-box {
+        margin-bottom: 10px;
+    }
+}
+
+/* Patients header with filters */
+.patients-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-options {
+    display: flex;
+    gap: 10px;
+}
+
+.filter-options button {
+    padding: 8px 15px;
+    background-color: #f1f1f1;
+    color: #333;
+    border: none;
+    border-radius: 4px;
+}
+
+.filter-options button.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Patient actions buttons */
+.patient-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.archive-btn {
+    background-color: #f0ad4e;
+}
+
+.archive-btn:hover {
+    background-color: #ec971f;
+}
+
+.restore-btn {
+    background-color: #5bc0de;
+}
+
+.restore-btn:hover {
+    background-color: #31b0d5;
+}
+
+.view-btn {
+    background-color: #5cb85c;
+}
+
+.view-btn:hover {
+    background-color: #449d44;
+}
+
+/* History Modal Styles */
+#history-modal .modal-content {
+    max-width: 700px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.patient-info-summary {
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 15px 0;
+}
+
+.add-history-entry {
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-radius: 5px;
+    margin: 20px 0;
+}
+
+.form-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.form-row input {
+    flex: 1;
+}
+
+.form-row textarea {
+    flex: 3;
+}
+
+/* Timeline styles */
+.timeline {
+    position: relative;
+    margin: 20px 0;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    background: #4CAF50;
+}
+
+.timeline-item {
+    position: relative;
+    margin-bottom: 30px;
+    padding-left: 70px;
+}
+
+.timeline-date {
+    position: absolute;
+    left: 0;
+    width: 60px;
+    text-align: right;
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 0.85em;
+}
+
+.timeline-content {
+    background: white;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .patients-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .filter-options {
+        margin-top: 10px;
+        width: 100%;
+    }
+    
+    .filter-options button {
+        flex: 1;
+    }
+    
+    .form-row {
+        flex-direction: column;
+    }
+    
+    .timeline-item {
+        padding-left: 50px;
+    }
+    
+    .timeline-date {
+        width: 40px;
+        font-size: 0.75em;
+    }
+}
+
+/* Dietitian patient grid */
+.dietitian-patients-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
+}
+
+/* Pour s'assurer que les boutons d'action ont une taille fixe et sont alignés */
+.patient-actions button {
+    min-width: 120px;
+    text-align: center;
+    white-space: nowrap;
+}
+
+/* Pour améliorer l'apparence des boutons d'archive dans les rendez-vous */
+.delete-btn {
+    background-color: #dc3545;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Patient status indicators */
+.patient-status {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.status-active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.status-archived {
+    background-color: #f44336;
+    color: white;
 } 
