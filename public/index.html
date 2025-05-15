@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriConsult - Votre Partenaire Santé</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="landing-page">
+        <!-- En-tête -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-leaf"></i>
+                    <span>NutriConsult</span>
+                </div>
+                <button id="show-login" class="login-button">
+                    <i class="fas fa-user"></i>
+                    Connexion
+                </button>
+            </div>
+        </header>
+
+        <!-- Section Héro -->
+        <section class="hero">
+            <div class="hero-overlay"></div>
+            <div class="hero-content">
+                <h1>Votre Santé, Notre Priorité</h1>
+                <p>Une approche personnalisée pour votre bien-être nutritionnel</p>
+                <button class="cta-button" onclick="document.getElementById('show-login').click()">
+                    <i class="fas fa-arrow-right"></i>
+                    Commencer Maintenant
+                </button>
+            </div>
+        </section>
+
+        <!-- Section Caractéristiques -->
+        <section class="features">
+            <div class="section-container">
+                <h2>Nos Services</h2>
+                <div class="section-description">
+                    <p>Découvrez notre gamme complète de services nutritionnels personnalisés</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <i class="fas fa-user-md"></i>
+                        <h3>Consultation Personnalisée</h3>
+                        <p>Des conseils adaptés à vos besoins spécifiques et à vos objectifs de santé</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Suivi Régulier</h3>
+                        <p>Un accompagnement continu pour atteindre et maintenir vos objectifs</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-apple-alt"></i>
+                        <h3>Plans Nutritionnels</h3>
+                        <p>Des programmes alimentaires équilibrés et adaptés à votre mode de vie</p>
+                    </div>
+                    <div class="feature-card">
+                        <i class="fas fa-heart"></i>
+                        <h3>Bien-être Global</h3>
+                        <p>Une approche holistique pour améliorer votre qualité de vie</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section Pourquoi Nous Choisir -->
+        <section class="why-us">
+            <div class="section-container">
+                <h2>Pourquoi Nous Choisir ?</h2>
+                <div class="section-description">
+                    <p>Des solutions éprouvées pour votre santé et votre bien-être</p>
+                </div>
+                <div class="benefits-grid">
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Expertise Reconnue</h3>
+                            <p>Une équipe de professionnels qualifiés à votre service</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Approche Personnalisée</h3>
+                            <p>Des solutions adaptées à vos besoins uniques</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Résultats Prouvés</h3>
+                            <p>Des méthodes efficaces et scientifiquement validées</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <div class="benefit-content">
+                            <h3>Suivi Digital</h3>
+                            <p>Une plateforme moderne pour un suivi optimal</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="section-container">
+                <div class="footer-content">
+                    <div class="footer-logo">
+                        <i class="fas fa-leaf"></i>
+                        <span>NutriConsult</span>
+                    </div>
+                    <p>&copy; 2024 NutriConsult. Tous droits réservés.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Modal de Connexion -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content login-form-container">
+            <span class="close-modal">&times;</span>
+            <div class="login-header">
+                <i class="fas fa-leaf"></i>
+                <h2>Connexion</h2>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">
+                        <i class="fas fa-user"></i>
+                        Identifiant
+                    </label>
+                    <input type="text" id="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i>
+                        Mot de passe
+                    </label>
+                    <input type="password" id="password" required>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Se connecter
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" style="display:none;">
+        <nav>
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                NutriConsult
+            </div>
+            <div class="user-info">
+                <span id="user-name"></span>
+                <button id="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Déconnexion
+                </button>
+            </div>
+        </nav>
+
+        <div id="admin-section" class="dashboard-section" style="display:none;">
+            <h2>Administration</h2>
+            <div class="admin-controls">
+                <button onclick="showUserManagement()">Gestion des Utilisateurs</button>
+                <button onclick="showPatientManagement()">Gestion des Patients</button>
+            </div>
+        </div>
+
+        <div id="dietitian-section" class="dashboard-section" style="display:none;">
+            <h2>Espace Diététicien</h2>
+            <div class="calendar-section">
+                <h3>Calendrier des Rendez-vous</h3>
+                <div id="appointments-calendar"></div>
+            </div>
+            <div class="patient-section">
+                <h3>Dossiers Patients</h3>
+                <div id="patient-list"></div>
+            </div>
+        </div>
+
+        <div id="patient-form-section" style="display:none;">
+            <h3>Informations Patient</h3>
+            <form id="patient-form">
+                <input type="text" name="name" placeholder="Nom complet">
+                <input type="number" name="age" placeholder="Âge">
+                <select name="sex">
+                    <option value="">Sélectionner le sexe</option>
+                    <option value="M">Masculin</option>
+                    <option value="F">Féminin</option>
+                </select>
+                <input type="tel" name="phone" placeholder="Téléphone">
+                <input type="number" name="weight" placeholder="Poids (kg)">
+                <input type="number" name="height" placeholder="Taille (cm)">
+                <button type="submit">Enregistrer</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
