@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="landing-page">
@@ -65,6 +66,31 @@
                         <h3>Bien-être Global</h3>
                         <p>Une approche holistique pour améliorer votre qualité de vie</p>
                     </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Catalogue Alimentaire -->
+        <section class="food-catalogue">
+            <div class="section-container">
+                <h2>Catalogue Alimentaire</h2>
+                <div class="section-description">
+                    <p>Explorez notre catalogue d'aliments pour comprendre leur valeur nutritionnelle et faire des choix éclairés</p>
+                </div>
+                <div class="food-categories">
+                    <button class="category-btn active" data-category="all">Tous</button>
+                    <button class="category-btn" data-category="fruits">Fruits</button>
+                    <button class="category-btn" data-category="vegetables">Légumes</button>
+                    <button class="category-btn" data-category="proteins">Protéines</button>
+                    <button class="category-btn" data-category="grains">Céréales</button>
+                    <button class="category-btn" data-category="dairy">Produits Laitiers</button>
+                </div>
+                <div class="search-container">
+                    <input type="text" id="food-search" placeholder="Rechercher un aliment...">
+                    <button id="search-food-btn"><i class="fas fa-search"></i></button>
+                </div>
+                <div class="food-grid" id="food-catalogue-grid">
+                    <!-- Food items will be dynamically inserted here -->
                 </div>
             </div>
         </section>

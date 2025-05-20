@@ -230,6 +230,38 @@ app.get('/api/users/search', authenticateToken, (req, res) => {
         });
 });
 
+// User statistics endpoint
+app.get('/api/users/statistics', authenticateToken, (req, res) => {
+    if (req.user.role !== 'admin') {
+        return res.status(403).json({ success: false, message: 'Accès administrateur requis' });
+    }
+    
+    // Query to get all users
+    db.all('SELECT id, username, role, datetime(created_at, "localtime") as created_at FROM users', [], 
+        (err, users) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Erreur lors de la récupération des statistiques' });
+            }
+            
+            // Calculate user statistics
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const statistics = {
+                totalUsers: users.length,
+                dietitians: users.filter(u => u.role === 'dietitian').length,
+                admins: users.filter(u => u.role === 'admin').length,
+                newUsers: users.filter(u => {
+                    if (!u.created_at) return false;
+                    const createdDate = new Date(u.created_at);
+                    return createdDate >= thirtyDaysAgo;
+                }).length
+            };
+            
+            res.json({ success: true, statistics });
+        });
+});
+
 // Endpoint pour obtenir tous les patients (y compris archivés ou non) - Placer avant les routes avec paramètres
 app.get('/api/patients/all', authenticateToken, (req, res) => {
     const showArchived = req.query.archived === 'true';
@@ -580,6 +612,50 @@ app.get('/api/auth/verify', authenticateToken, (req, res) => {
     res.json({ 
         success: true, 
         user: { id: req.user.id, username: req.user.username, role: req.user.role }
+    });
+});
+
+// Patient statistics endpoint
+app.get('/api/patients/statistics', authenticateToken, (req, res) => {
+    if (req.user.role !== 'admin' && req.user.role !== 'dietitian') {
+        return res.status(403).json({ success: false, message: 'Accès non autorisé' });
+    }
+    
+    // Get total patients count
+    db.get('SELECT COUNT(*) as total FROM patients', [], (err, totalResult) => {
+        if (err) {
+            return res.status(500).json({ success: false, message: 'Erreur lors de la récupération des statistiques' });
+        }
+        
+        // Get active patients count
+        db.get('SELECT COUNT(*) as active FROM patients WHERE archived = 0 OR archived IS NULL', [], (err, activeResult) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: 'Erreur lors de la récupération des statistiques' });
+            }
+            
+            // Get archived patients count
+            db.get('SELECT COUNT(*) as archived FROM patients WHERE archived = 1', [], (err, archivedResult) => {
+                if (err) {
+                    return res.status(500).json({ success: false, message: 'Erreur lors de la récupération des statistiques' });
+                }
+                
+                // Get total appointments count
+                db.get('SELECT COUNT(*) as appointments FROM appointments', [], (err, appointmentsResult) => {
+                    if (err) {
+                        return res.status(500).json({ success: false, message: 'Erreur lors de la récupération des statistiques' });
+                    }
+                    
+                    const statistics = {
+                        totalPatients: totalResult.total,
+                        activePatients: activeResult.active,
+                        archivedPatients: archivedResult.archived,
+                        totalAppointments: appointmentsResult.appointments
+                    };
+                    
+                    res.json({ success: true, statistics });
+                });
+            });
+        });
     });
 });
 
