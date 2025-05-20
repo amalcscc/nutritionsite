@@ -424,11 +424,11 @@ app.get('/api/patients/:id/history', authenticateToken, (req, res) => {
     db.all('SELECT * FROM patient_history WHERE patient_id = ? ORDER BY date DESC', 
         [patientId], 
         (err, history) => {
-            if (err) {
+        if (err) {
                 return res.status(500).json({ success: false, message: 'Erreur lors de la récupération de l\'historique' });
-            }
+        }
             res.json({ success: true, history });
-        });
+    });
 });
 
 app.delete('/api/patients/:id', authenticateToken, (req, res) => {

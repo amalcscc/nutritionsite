@@ -232,8 +232,8 @@ async function loadUsers() {
 }
 
 function displayUsers(users) {
-    const usersList = document.getElementById('users-list');
-    usersList.innerHTML = '<h4>Liste des Utilisateurs</h4>';
+            const usersList = document.getElementById('users-list');
+            usersList.innerHTML = '<h4>Liste des Utilisateurs</h4>';
     
     if (users.length === 0) {
         usersList.innerHTML += '<p>Aucun utilisateur trouvé</p>';
@@ -241,18 +241,18 @@ function displayUsers(users) {
     }
     
     users.forEach(user => {
-        const userElement = document.createElement('div');
-        userElement.className = 'user-item';
-        userElement.innerHTML = `
-            <p>Nom: ${user.username}</p>
-            <p>Rôle: ${user.role}</p>
+                const userElement = document.createElement('div');
+                userElement.className = 'user-item';
+                userElement.innerHTML = `
+                    <p>Nom: ${user.username}</p>
+                    <p>Rôle: ${user.role}</p>
             <div class="user-actions">
                 <button onclick="showEditUserModal('${user.id}')" class="edit-btn">Modifier</button>
                 <button onclick="toggleUserSuspension('${user.id}', ${user.suspended ? 'false' : 'true'})" class="suspend-btn">${user.suspended ? 'Réactiver' : 'Suspendre'}</button>
             </div>
-        `;
-        usersList.appendChild(userElement);
-    });
+                `;
+                usersList.appendChild(userElement);
+            });
 }
 
 async function searchUsers() {
@@ -654,292 +654,85 @@ async function deleteAppointment(appointmentId) {
     }
 }
 
-// Fonctions pour le tableau de bord du diététicien
+// Update dietitian dashboard to include receptionist functions
 function loadDietitianDashboard() {
     dietitianSection.innerHTML = `
         <h2>Espace Diététicien</h2>
-        <div class="dashboard-grid">
-            <div class="calendar-section">
-                <div class="section-header">
-                    <h3>Calendrier des Rendez-vous</h3>
-                    <button onclick="showAddAppointmentForm()">Nouveau Rendez-vous</button>
+        <div class="admin-controls">
+            <button onclick="showDietitianConsultationForm()">Formulaire de Consultation</button>
+            <button onclick="showDietitianPatientManagement()">Gestion des Patients</button>
+            <button onclick="showDietitianAppointmentManagement()">Gestion des Rendez-vous</button>
+            <button onclick="showDietitianAvailability()">Liste de Disponibilité</button>
+            <button onclick="viewFoodCatalog()">Catalogue Alimentaire</button>
                 </div>
-                <div id="appointments-calendar"></div>
-            </div>
-            <div class="patient-section">
-                <div class="section-header">
-                    <h3>Dossiers Patients</h3>
-                    <div class="patient-actions-header">
-                        <div class="search-box">
-                            <input type="text" id="dietitian-patient-search" placeholder="Rechercher des patients..." />
-                            <button id="search-dietitian-patient-btn"><i class="fas fa-search"></i></button>
-                        </div>
-                        <button onclick="showAddPatientForm()">Nouveau Patient</button>
-                    </div>
-                </div>
-                <div id="dietitian-patient-list"></div>
-            </div>
-        </div>
-        
-        <div class="view-catalog-container">
-            <button onclick="viewFoodCatalog()" class="view-catalog-btn">
-                <i class="fas fa-apple-alt"></i> Accéder au Catalogue Alimentaire
-            </button>
-        </div>
+        <div id="dietitian-content"></div>
+    `;
+    showDietitianConsultationForm();
+}
 
-        <!-- Formulaire de Rendez-vous -->
-        <div id="appointment-form-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal" onclick="closeAppointmentModal()">&times;</span>
-                <h3>Nouveau Rendez-vous</h3>
-                <form id="appointment-form">
-                    <select name="patient_id" required>
-                        <option value="">Sélectionner un patient</option>
-                    </select>
-                    <input type="datetime-local" name="date" required>
-                    <textarea name="notes" placeholder="Notes" rows="4"></textarea>
-                    <button type="submit">Enregistrer</button>
+// Update consultation form with correct parameters
+function showDietitianConsultationForm() {
+    const html = `
+        <h3>Formulaire de Consultation</h3>
+        <form id="dietitian-consultation-form">
+            <h4>Paramètres Anthropométriques (PA)</h4>
+            <input type="number" name="weight" placeholder="Poids (kg)" step="0.1" required>
+            <input type="number" name="height" placeholder="Taille (cm)" required>
+            <input type="number" name="waist" placeholder="Tour de taille (cm)" required>
+            
+            <h4>Paramètres Biologiques (PB)</h4>
+            <input type="number" name="systolic" placeholder="Pression systolique (mmHg)" required>
+            <input type="number" name="diastolic" placeholder="Pression diastolique (mmHg)" required>
+            
+            <button type="submit">Enregistrer Consultation</button>
                 </form>
-            </div>
-        </div>
+        <div id="bmi-result"></div>
+        <div id="weight-history"></div>
+        <div id="consultation-history"></div>
+        <div id="dietitian-statistics"></div>
+    `;
+    document.getElementById('dietitian-content').innerHTML = html;
+    document.getElementById('dietitian-consultation-form').addEventListener('submit', handleDietitianConsultationSubmit);
+    loadWeightHistory();
+    loadConsultationHistory();
+    loadDietitianStatistics();
+}
 
-        <!-- Formulaire Patient -->
-        <div id="patient-form-modal" class="modal">
-            <div class="modal-content">
-                <span class="close-modal" onclick="closePatientModal()">&times;</span>
-                <h3>Nouveau Patient</h3>
-                <form id="new-patient-form">
-                    <input type="text" name="name" placeholder="Nom complet" required>
-                    <input type="number" name="age" placeholder="Âge" required>
+// Add dietitian patient management functions
+function showDietitianPatientManagement() {
+    const html = `
+        <h3>Gestion des Patients</h3>
+        <form id="dietitian-patient-form">
+            <input type="text" name="nom" placeholder="Nom" required>
+            <input type="text" name="prenom" placeholder="Prénom" required>
+            <input type="tel" name="phone" placeholder="Numéro de téléphone" required>
                     <select name="sex" required>
                         <option value="">Sélectionner le sexe</option>
                         <option value="M">Masculin</option>
                         <option value="F">Féminin</option>
                     </select>
-                    <input type="tel" name="phone" placeholder="Téléphone" required>
-                    <input type="number" name="weight" step="0.1" placeholder="Poids (kg)" required>
-                    <input type="number" name="height" placeholder="Taille (cm)" required>
+            <select name="situation_famille" required>
+                <option value="">Situation de famille</option>
+                <option value="célibataire">Célibataire</option>
+                <option value="marié(e)">Marié(e)</option>
+                <option value="divorcé(e)">Divorcé(e)</option>
+                <option value="veuf(ve)">Veuf(ve)</option>
+            </select>
+            <input type="text" name="diagnostic" placeholder="Diagnostic médical" required>
                     <button type="submit">Enregistrer</button>
                 </form>
-            </div>
-        </div>
+        <div id="dietitian-patients-list"></div>
     `;
-
-    // Initialiser les gestionnaires d'événements
-    document.getElementById('appointment-form').addEventListener('submit', handleAppointmentSubmit);
-    document.getElementById('new-patient-form').addEventListener('submit', handleNewPatientSubmit);
-    
-    // Ajouter un événement pour la recherche de patients
-    document.getElementById('search-dietitian-patient-btn').addEventListener('click', searchDietitianPatients);
-    document.getElementById('dietitian-patient-search').addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            searchDietitianPatients();
-        }
-    });
-    
-    loadAppointments();
-    loadAllDietitianPatients();
+    document.getElementById('dietitian-content').innerHTML = html;
+    document.getElementById('dietitian-patient-form').addEventListener('submit', handleDietitianPatientSubmit);
+    loadDietitianPatients();
 }
 
-// Gestion des rendez-vous
-function showAddAppointmentForm() {
-    const modal = document.getElementById('appointment-form-modal');
-    modal.style.display = 'block';
-    loadPatientsList();
-}
-
-function closeAppointmentModal() {
-    const modal = document.getElementById('appointment-form-modal');
-    modal.style.display = 'none';
-}
-
-async function loadPatientsList() {
-    try {
-        const response = await fetch(`${API_URL}/patients?archived=false`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            const select = document.querySelector('#appointment-form select[name="patient_id"]');
-            select.innerHTML = '<option value="">Sélectionner un patient</option>';
-            
-            data.patients.forEach(patient => {
-                const option = document.createElement('option');
-                option.value = patient.id;
-                option.textContent = patient.name;
-                select.appendChild(option);
-            });
-            
-            return true; // Retourne une promesse résolue
-        }
-        return false;
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Erreur lors du chargement des patients');
-        return false;
-    }
-}
-
-async function handleAppointmentSubmit(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const appointmentData = Object.fromEntries(formData.entries());
-
-    try {
-        const response = await fetch(`${API_URL}/appointments`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-            body: JSON.stringify(appointmentData),
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            alert('Rendez-vous enregistré avec succès');
-            closeAppointmentModal();
-            e.target.reset();
-            loadAppointments();
-        } else {
-            alert('Erreur: ' + data.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Erreur lors de l\'enregistrement du rendez-vous');
-    }
-}
-
-// Gestion des patients pour le diététicien
-async function loadDietitianPatients() {
-    try {
-        const response = await fetch(`${API_URL}/patients?archived=false`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            displayDietitianPatients(data.patients);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-function displayDietitianPatients(patients) {
-    const patientList = document.getElementById('dietitian-patient-list');
-    if (!patientList) return;
-    
-    // Clear previous content
-    patientList.innerHTML = '';
-    
-    // Create header element with filter buttons
-    const patientsHeader = document.createElement('div');
-    patientsHeader.className = 'patients-header';
-    patientsHeader.innerHTML = `
-        <h4>Liste des Patients</h4>
-        <div class="filter-options">
-            <button id="dietitian-show-all" class="active">Voir Tout</button>
-            <button id="dietitian-show-active">Actifs Uniquement</button>
-            <button id="dietitian-show-archived">Archivés Uniquement</button>
-        </div>
-    `;
-    patientList.appendChild(patientsHeader);
-    
-    // Ajouter les écouteurs d'événements pour les filtres
-    document.getElementById('dietitian-show-all').addEventListener('click', function() {
-        this.classList.add('active');
-        document.getElementById('dietitian-show-active').classList.remove('active');
-        document.getElementById('dietitian-show-archived').classList.remove('active');
-        loadAllDietitianPatients();
-    });
-    
-    document.getElementById('dietitian-show-active').addEventListener('click', function() {
-        this.classList.add('active');
-        document.getElementById('dietitian-show-all').classList.remove('active');
-        document.getElementById('dietitian-show-archived').classList.remove('active');
-        loadDietitianPatients();
-    });
-    
-    document.getElementById('dietitian-show-archived').addEventListener('click', function() {
-        this.classList.add('active');
-        document.getElementById('dietitian-show-all').classList.remove('active');
-        document.getElementById('dietitian-show-active').classList.remove('active');
-        loadDietitianArchivedPatients();
-    });
-
-    if (patients.length === 0) {
-        const noDataMsg = document.createElement('p');
-        noDataMsg.className = 'no-data';
-        noDataMsg.textContent = 'Aucun patient enregistré';
-        patientList.appendChild(noDataMsg);
-        return;
-    }
-
-    const patientsGrid = document.createElement('div');
-    patientsGrid.className = 'dietitian-patients-grid';
-    patientList.appendChild(patientsGrid);
-
-    patients.forEach(patient => {
-        const patientCard = document.createElement('div');
-        patientCard.className = 'patient-card';
-        const imc = (patient.weight / Math.pow(patient.height / 100, 2)).toFixed(1);
-        
-        // Ajouter un indicateur d'état (actif/archivé)
-        const statusClass = patient.archived ? 'status-archived' : 'status-active';
-        const statusText = patient.archived ? 'Archivé' : 'Actif';
-        
-        patientCard.innerHTML = `
-            <div class="patient-info">
-                <div class="patient-status ${statusClass}">${statusText}</div>
-                <h4>${patient.name}</h4>
-                <p>Age: ${patient.age} ans</p>
-                <p>Sexe: ${patient.sex === 'M' ? 'Masculin' : 'Féminin'}</p>
-                <p>Téléphone: ${patient.phone}</p>
-                <p>Poids: ${patient.weight} kg</p>
-                <p>Taille: ${patient.height} cm</p>
-                <p>IMC: ${imc}</p>
-            </div>
-            <div class="patient-actions">
-                <button onclick="viewPatientHistory(${patient.id})" class="view-btn">Historique</button>
-                <button onclick="scheduleAppointment(${patient.id})">Programmer RDV</button>
-                ${patient.archived ? 
-                    `<button onclick="restorePatient(${patient.id})" class="restore-btn">Restaurer</button>` :
-                    `<button onclick="archivePatient(${patient.id})" class="archive-btn">Archiver</button>`
-                }
-            </div>
-        `;
-        patientsGrid.appendChild(patientCard);
-    });
-}
-
-// Gestion des patients
-function showAddPatientForm() {
-    const modal = document.getElementById('patient-form-modal');
-    modal.style.display = 'block';
-}
-
-function closePatientModal() {
-    const modal = document.getElementById('patient-form-modal');
-    modal.style.display = 'none';
-}
-
-async function handleNewPatientSubmit(e) {
+async function handleDietitianPatientSubmit(e) {
     e.preventDefault();
     const formData = new FormData(e.target);
     const patientData = Object.fromEntries(formData.entries());
-    
-    // Assurer que le patient est créé comme non archivé
     patientData.archived = 0;
-
     try {
         const response = await fetch(`${API_URL}/patients`, {
             method: 'POST',
@@ -949,15 +742,11 @@ async function handleNewPatientSubmit(e) {
             },
             body: JSON.stringify(patientData),
         });
-
         const data = await response.json();
-
         if (data.success) {
             alert('Patient enregistré avec succès');
-            closePatientModal();
             e.target.reset();
-            loadAllDietitianPatients();
-            loadPatientsList(); // Recharger la liste des patients pour le formulaire de rendez-vous
+    loadDietitianPatients();
         } else {
             alert('Erreur: ' + data.message);
         }
@@ -967,131 +756,14 @@ async function handleNewPatientSubmit(e) {
     }
 }
 
-async function searchDietitianPatients() {
-    const searchQuery = document.getElementById('dietitian-patient-search').value.trim();
-    
-    try {
-        const response = await fetch(`${API_URL}/patients/search?q=${encodeURIComponent(searchQuery)}`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            displayDietitianPatients(data.patients);
-        } else {
-            alert('Erreur: ' + data.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Erreur lors de la recherche des patients');
-    }
-}
-
-async function archivePatient(patientId) {
-    // Vérifier que patientId est défini et valide
-    if (!patientId) {
-        console.error("Erreur: ID de patient non défini");
-        alert("Erreur: Impossible d'archiver ce patient, ID non disponible");
-        return;
-    }
-    
-    if (!confirm('Êtes-vous sûr de vouloir archiver ce patient ?')) {
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_URL}/patients/${patientId}/archive`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            alert('Patient archivé avec succès');
-            
-            // Rafraîchir la vue appropriée
-            if (currentUser.role === 'admin') {
-                loadAllPatients();
-            } else if (currentUser.role === 'dietitian') {
-                loadAllDietitianPatients();
-                loadAppointments();
-            }
-        } else {
-            alert('Erreur: ' + data.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Erreur lors de l\'archivage du patient');
-    }
-}
-
-async function restorePatient(patientId) {
-    if (!confirm('Êtes-vous sûr de vouloir restaurer ce patient ?')) {
-        return;
-    }
-
-    try {
-        const response = await fetch(`${API_URL}/patients/${patientId}/restore`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            alert('Patient restauré avec succès');
-            
-            // Rafraîchir la vue appropriée
-            if (currentUser.role === 'admin') {
-                loadAllPatients();
-            } else if (currentUser.role === 'dietitian') {
-                loadAllDietitianPatients();
-            }
-        } else {
-            alert('Erreur: ' + data.message);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        alert('Erreur lors de la restauration du patient');
-    }
-}
-
-async function loadArchivedPatients() {
-    try {
-        const response = await fetch(`${API_URL}/patients?archived=true`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            displayPatients(data.patients);
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
-async function loadAllDietitianPatients() {
+async function loadDietitianPatients() {
     try {
         const response = await fetch(`${API_URL}/patients/all`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
             },
         });
-
         const data = await response.json();
-
         if (data.success) {
             displayDietitianPatients(data.patients);
         }
@@ -1100,90 +772,134 @@ async function loadAllDietitianPatients() {
     }
 }
 
-async function loadDietitianArchivedPatients() {
-    try {
-        const response = await fetch(`${API_URL}/patients?archived=true`, {
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-            },
-        });
-
-        const data = await response.json();
-
-        if (data.success) {
-            displayDietitianPatients(data.patients);
-        }
-    } catch (error) {
-        console.error('Error:', error);
+function displayDietitianPatients(patients) {
+    const list = document.getElementById('dietitian-patients-list');
+    list.innerHTML = '<h4>Liste des Patients</h4>';
+    if (!patients || patients.length === 0) {
+        list.innerHTML += '<p>Aucun patient trouvé</p>';
+        return;
     }
+    patients.forEach(patient => {
+        const div = document.createElement('div');
+        div.className = 'user-item';
+        div.innerHTML = `
+            <p>Nom: ${patient.nom || patient.name} ${patient.prenom || ''}</p>
+            <p>Téléphone: ${patient.phone}</p>
+            <p>Sexe: ${patient.sex}</p>
+            <p>Situation de famille: ${patient.situation_famille || ''}</p>
+            <p>Diagnostic médical: ${patient.diagnostic || ''}</p>
+            <div class="user-actions">
+                <button onclick="editDietitianPatient('${patient.id}')" class="edit-btn">Modifier</button>
+                <button onclick="archivePatient('${patient.id}')" class="archive-btn">Archiver</button>
+            </div>
+        `;
+        list.appendChild(div);
+    });
 }
 
-async function loadAllPatients() {
-    try {
-        const response = await fetch(`${API_URL}/patients/all`, {
+function editDietitianPatient(patientId) {
+    // Fetch and fill the form for editing
+    fetch(`${API_URL}/patients/${patientId}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
             },
-        });
-
-        const data = await response.json();
-
+    })
+    .then(response => response.json())
+    .then(data => {
         if (data.success) {
-            displayPatients(data.patients);
+            const patient = data.patient;
+            const form = document.getElementById('dietitian-patient-form');
+            form.nom.value = patient.nom || patient.name;
+            form.prenom.value = patient.prenom || '';
+            form.phone.value = patient.phone;
+            form.sex.value = patient.sex;
+            form.situation_famille.value = patient.situation_famille || '';
+            form.diagnostic.value = patient.diagnostic || '';
+            form.dataset.editId = patientId;
         }
-    } catch (error) {
-        console.error('Error:', error);
-    }
+    });
 }
 
-// Fonction spécifique pour archiver un patient à partir d'un rendez-vous
-async function archivePatientFromAppointment(patientId) {
-    // Vérifier que patientId est défini et valide
-    if (!patientId) {
-        console.error("Erreur: ID de patient non défini dans le rendez-vous");
-        alert("Erreur: Impossible d'archiver ce patient, ID non disponible");
-        return;
-    }
-    
-    // Convertir en nombre entier pour s'assurer de la compatibilité
-    patientId = parseInt(patientId);
-    
-    if (isNaN(patientId)) {
-        console.error("Erreur: ID de patient n'est pas un nombre valide");
-        alert("Erreur: ID de patient invalide");
-        return;
-    }
-    
-    if (!confirm('Êtes-vous sûr de vouloir archiver ce patient ?')) {
-        return;
-    }
+function showDietitianAppointmentManagement() {
+    document.getElementById('dietitian-content').innerHTML = '<h3>Gestion des Rendez-vous</h3><div id="dietitian-appointments-list"></div>';
+    loadDietitianAppointments();
+}
 
-    try {
-        const response = await fetch(`${API_URL}/patients/${patientId}/archive`, {
-            method: 'PUT',
-            headers: {
-                'Authorization': `Bearer ${localStorage.getItem('token')}`,
-                'Content-Type': 'application/json'
-            },
-        });
-
-        const data = await response.json();
-
+function loadDietitianAppointments() {
+    fetch(`${API_URL}/appointments`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
         if (data.success) {
-            alert('Patient archivé avec succès');
-            // Rafraîchir la liste des rendez-vous
-            loadAppointments();
-            // Si nous sommes dans l'interface du diététicien, rafraîchir aussi la liste des patients
-            if (currentUser.role === 'dietitian') {
-                loadAllDietitianPatients();
-            }
-        } else {
-            alert('Erreur du serveur: ' + (data.message || 'Détails non disponibles'));
+            displayDietitianAppointments(data.appointments);
         }
-    } catch (error) {
-        console.error('Erreur lors de l\'archivage du patient:', error);
-        alert(`Erreur lors de l'archivage du patient: ${error.message || 'Erreur inconnue'}`);
+    });
+}
+
+function displayDietitianAppointments(appointments) {
+    const list = document.getElementById('dietitian-appointments-list');
+    list.innerHTML = '<h4>Liste des Rendez-vous</h4>';
+    if (!appointments || appointments.length === 0) {
+        list.innerHTML += '<p>Aucun rendez-vous trouvé</p>';
+        return;
     }
+    appointments.forEach(appointment => {
+        const div = document.createElement('div');
+        div.className = 'appointment-item';
+        div.innerHTML = `
+            <p>Date: ${new Date(appointment.date).toLocaleString()}</p>
+            <p>Patient: ${appointment.patientName}</p>
+            <div class="appointment-actions">
+                <button onclick="editDietitianAppointment('${appointment.id}')" class="edit-btn">Modifier</button>
+                <button onclick="deleteAppointment('${appointment.id}')" class="delete-btn">Supprimer</button>
+            </div>
+        `;
+        list.appendChild(div);
+    });
+}
+
+function showDietitianAvailability() {
+    document.getElementById('dietitian-content').innerHTML = '<h3>Liste de Disponibilité</h3><div id="dietitian-availability-list"></div>';
+    loadDietitianAvailability();
+}
+
+function loadDietitianAvailability() {
+    fetch(`${API_URL}/availability`, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            displayDietitianAvailability(data.availability);
+        }
+    });
+}
+
+function displayDietitianAvailability(availability) {
+    const list = document.getElementById('dietitian-availability-list');
+    list.innerHTML = '<h4>Disponibilités</h4>';
+    if (!availability || availability.length === 0) {
+        list.innerHTML += '<p>Aucune disponibilité trouvée</p>';
+        return;
+    }
+    availability.forEach(slot => {
+        const div = document.createElement('div');
+        div.className = 'availability-item';
+        div.innerHTML = `
+            <p>Date: ${new Date(slot.date).toLocaleString()}</p>
+            <p>Statut: ${slot.status}</p>
+            <div class="availability-actions">
+                <button onclick="editDietitianAvailability('${slot.id}')" class="edit-btn">Modifier</button>
+                <button onclick="deleteAvailability('${slot.id}')" class="delete-btn">Supprimer</button>
+            </div>
+        `;
+        list.appendChild(div);
+    });
 }
 
 // Food Catalogue Data
@@ -1681,7 +1397,7 @@ function showEditUserModal(userId) {
                         <div class="login-header">
                             <i class="fas fa-user-edit"></i>
                             <h2>Modifier Utilisateur</h2>
-                        </div>
+            </div>
                         <form id="edit-user-form">
                             <input type="hidden" name="id" value="${user.id}">
                             <div class="form-group">
@@ -1698,15 +1414,15 @@ function showEditUserModal(userId) {
                             </div>
                             <button type="submit" class="submit-btn">Enregistrer</button>
                         </form>
-                    </div>
-                `;
+            </div>
+        `;
                 document.body.appendChild(modal);
             } else {
                 modal.querySelector('input[name="id"]').value = user.id;
                 modal.querySelector('input[name="username"]').value = user.username;
                 modal.querySelector('select[name="role"]').value = user.role;
             }
-            modal.style.display = 'block';
+    modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             document.getElementById('edit-user-form').onsubmit = handleEditUser;
         }
@@ -1716,7 +1432,7 @@ function showEditUserModal(userId) {
 function closeEditUserModal() {
     const modal = document.getElementById('edit-user-modal');
     if (modal) {
-        modal.style.display = 'none';
+    modal.style.display = 'none';
         document.body.style.overflow = 'auto';
     }
 }
@@ -1868,7 +1584,7 @@ async function loadReceptionistPatients() {
             },
         });
         const data = await response.json();
-        if (data.success) {
+            if (data.success) {
             displayReceptionistPatients(data.patients);
         }
     } catch (error) {
